@@ -41,6 +41,7 @@ import (
 	"go.opentelemetry.io/otel/codes"
 	semconv "go.opentelemetry.io/otel/semconv/v1.12.0"
 	"go.opentelemetry.io/otel/trace"
+
 	"k8s.io/client-go/informers"
 	"k8s.io/mount-utils"
 
@@ -711,6 +712,8 @@ func NewMainKubelet(kubeCfg *kubeletconfiginternal.KubeletConfiguration,
 		}
 	}
 
+	tokenManager := token.NewManager(kubeDeps.KubeClient)
+
 	runtime, err := kuberuntime.NewKubeGenericRuntimeManager(
 		kubecontainer.FilterEventRecorder(kubeDeps.Recorder),
 		klet.livenessManager,
@@ -744,6 +747,8 @@ func NewMainKubelet(kubeCfg *kubeletconfiginternal.KubeletConfiguration,
 		*kubeCfg.MemoryThrottlingFactor,
 		kubeDeps.PodStartupLatencyTracker,
 		kubeDeps.TracerProvider,
+		tokenManager,
+		klet.kubeClient,
 	)
 	if err != nil {
 		return nil, err
@@ -873,8 +878,6 @@ func NewMainKubelet(kubeCfg *kubeletconfiginternal.KubeletConfiguration,
 			kubeDeps.Recorder)
 	}
 
-	tokenManager := token.NewManager(kubeDeps.KubeClient)
-
 	var clusterTrustBundleManager clustertrustbundle.Manager
 	if kubeDeps.KubeClient != nil && utilfeature.DefaultFeatureGate.Enabled(features.ClusterTrustBundleProjection) {
 		kubeInformers := informers.NewSharedInformerFactoryWithOptions(kubeDeps.KubeClient, 0)
@@ -948,7 +951,7 @@ func NewMainKubelet(kubeCfg *kubeletconfiginternal.KubeletConfiguration,
 
 	// Safe, allowed sysctls can always be used as unsafe sysctls in the spec.
 	// Hence, we concatenate those two lists.
-	safeAndUnsafeSysctls := append(sysctl.SafeSysctlAllowlist(ctx), allowedUnsafeSysctls...)
+	safeAndUnsafeSysctls := append(sysctl.SafeSysctlAllowlist(), allowedUnsafeSysctls...)
 	sysctlsAllowlist, err := sysctl.NewAllowlist(safeAndUnsafeSysctls)
 	if err != nil {
 		return nil, err
@@ -2812,6 +2815,30 @@ func (kl *Kubelet) HandlePodSyncs(pods []*v1.Pod) {
 	}
 }
 
+func isPodResizeInProgress(pod *v1.Pod, podStatus *kubecontainer.PodStatus) bool {
+	for _, c := range pod.Spec.Containers {
+		if cs := podStatus.FindContainerStatusByName(c.Name); cs != nil {
+			if cs.State != kubecontainer.ContainerStateRunning || cs.Resources == nil {
+				continue
+			}
+			if c.Resources.Requests != nil {
+				if cs.Resources.CPURequest != nil && !cs.Resources.CPURequest.Equal(*c.Resources.Requests.Cpu()) {
+					return true
+				}
+			}
+			if c.Resources.Limits != nil {
+				if cs.Resources.CPULimit != nil && !cs.Resources.CPULimit.Equal(*c.Resources.Limits.Cpu()) {
+					return true
+				}
+				if cs.Resources.MemoryLimit != nil && !cs.Resources.MemoryLimit.Equal(*c.Resources.Limits.Memory()) {
+					return true
+				}
+			}
+		}
+	}
+	return false
+}
+
 // canResizePod determines if the requested resize is currently feasible.
 // pod should hold the desired (pre-allocated) spec.
 // Returns true if the resize can proceed.
@@ -2904,14 +2931,6 @@ func (kl *Kubelet) handlePodResourcesResize(pod *v1.Pod, podStatus *kubecontaine
 			if !apiequality.Semantic.DeepEqual(container.Resources, allocatedPod.Spec.Containers[i].Resources) {
 				key := kuberuntime.GetStableKey(pod, &container)
 				kl.backOff.Reset(key)
-			}
-		}
-		for i, container := range pod.Spec.InitContainers {
-			if podutil.IsRestartableInitContainer(&container) {
-				if !apiequality.Semantic.DeepEqual(container.Resources, allocatedPod.Spec.InitContainers[i].Resources) {
-					key := kuberuntime.GetStableKey(pod, &container)
-					kl.backOff.Reset(key)
-				}
 			}
 		}
 		allocatedPod = pod

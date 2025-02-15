@@ -1241,13 +1241,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"k8s.io/kube-scheduler/config/v1.ScoringStrategy":                                                       schema_k8sio_kube_scheduler_config_v1_ScoringStrategy(ref),
 		"k8s.io/kube-scheduler/config/v1.UtilizationShapePoint":                                                 schema_k8sio_kube_scheduler_config_v1_UtilizationShapePoint(ref),
 		"k8s.io/kube-scheduler/config/v1.VolumeBindingArgs":                                                     schema_k8sio_kube_scheduler_config_v1_VolumeBindingArgs(ref),
-		"k8s.io/kubectl/pkg/config/v1alpha1.AliasOverride":                                                      schema_kubectl_pkg_config_v1alpha1_AliasOverride(ref),
-		"k8s.io/kubectl/pkg/config/v1alpha1.CommandOverride":                                                    schema_kubectl_pkg_config_v1alpha1_CommandOverride(ref),
-		"k8s.io/kubectl/pkg/config/v1alpha1.CommandOverrideFlag":                                                schema_kubectl_pkg_config_v1alpha1_CommandOverrideFlag(ref),
-		"k8s.io/kubectl/pkg/config/v1alpha1.Preference":                                                         schema_kubectl_pkg_config_v1alpha1_Preference(ref),
 		"k8s.io/kubelet/config/v1.CredentialProvider":                                                           schema_k8sio_kubelet_config_v1_CredentialProvider(ref),
 		"k8s.io/kubelet/config/v1.CredentialProviderConfig":                                                     schema_k8sio_kubelet_config_v1_CredentialProviderConfig(ref),
 		"k8s.io/kubelet/config/v1.ExecEnvVar":                                                                   schema_k8sio_kubelet_config_v1_ExecEnvVar(ref),
+		"k8s.io/kubelet/config/v1.ServiceAccountTokenAttributes":                                                schema_k8sio_kubelet_config_v1_ServiceAccountTokenAttributes(ref),
 		"k8s.io/kubelet/config/v1alpha1.CredentialProvider":                                                     schema_k8sio_kubelet_config_v1alpha1_CredentialProvider(ref),
 		"k8s.io/kubelet/config/v1alpha1.CredentialProviderConfig":                                               schema_k8sio_kubelet_config_v1alpha1_CredentialProviderConfig(ref),
 		"k8s.io/kubelet/config/v1alpha1.ExecEnvVar":                                                             schema_k8sio_kubelet_config_v1alpha1_ExecEnvVar(ref),
@@ -47424,7 +47421,7 @@ func schema_k8sio_api_resource_v1alpha3_DeviceRequest(ref common.ReferenceCallba
 					},
 					"allocationMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AllocationMode and its related fields define how devices are allocated to satisfy this request. Supported values are:\n\n- ExactCount: This request is for a specific number of devices.\n  This is the default. The exact number is provided in the\n  count field.\n\n- All: This request is for all of the matching devices in a pool.\n  At least one device must exist on the node for the allocation to succeed.\n  Allocation will fail if some devices are already allocated,\n  unless adminAccess is requested.\n\nIf AllocationMode is not specified, the default mode is ExactCount. If the mode is ExactCount and count is not specified, the default count is one. Any other requests must specify this field.\n\nMore modes may get added in the future. Clients must refuse to handle requests with unknown modes.",
+							Description: "AllocationMode and its related fields define how devices are allocated to satisfy this request. Supported values are:\n\n- ExactCount: This request is for a specific number of devices.\n  This is the default. The exact number is provided in the\n  count field.\n\n- All: This request is for all of the matching devices in a pool.\n  Allocation will fail if some devices are already allocated,\n  unless adminAccess is requested.\n\nIf AlloctionMode is not specified, the default mode is ExactCount. If the mode is ExactCount and count is not specified, the default count is one. Any other requests must specify this field.\n\nMore modes may get added in the future. Clients must refuse to handle requests with unknown modes.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -48921,7 +48918,7 @@ func schema_k8sio_api_resource_v1beta1_DeviceRequest(ref common.ReferenceCallbac
 					},
 					"allocationMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AllocationMode and its related fields define how devices are allocated to satisfy this request. Supported values are:\n\n- ExactCount: This request is for a specific number of devices.\n  This is the default. The exact number is provided in the\n  count field.\n\n- All: This request is for all of the matching devices in a pool.\n  At least one device must exist on the node for the allocation to succeed.\n  Allocation will fail if some devices are already allocated,\n  unless adminAccess is requested.\n\nIf AllocationMode is not specified, the default mode is ExactCount. If the mode is ExactCount and count is not specified, the default count is one. Any other requests must specify this field.\n\nMore modes may get added in the future. Clients must refuse to handle requests with unknown modes.",
+							Description: "AllocationMode and its related fields define how devices are allocated to satisfy this request. Supported values are:\n\n- ExactCount: This request is for a specific number of devices.\n  This is the default. The exact number is provided in the\n  count field.\n\n- All: This request is for all of the matching devices in a pool.\n  Allocation will fail if some devices are already allocated,\n  unless adminAccess is requested.\n\nIf AlloctionMode is not specified, the default mode is ExactCount. If the mode is ExactCount and count is not specified, the default count is one. Any other requests must specify this field.\n\nMore modes may get added in the future. Clients must refuse to handle requests with unknown modes.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -63553,238 +63550,6 @@ func schema_k8sio_kube_scheduler_config_v1_VolumeBindingArgs(ref common.Referenc
 	}
 }
 
-func schema_kubectl_pkg_config_v1alpha1_AliasOverride(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "AliasOverride stores the alias definitions.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Name is the name of alias that can only include alphabetical characters If the alias name conflicts with the built-in command, built-in command will be used.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"command": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Command is the single or set of commands to execute, such as \"set env\" or \"create\"",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"prependArgs": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "PrependArgs stores the arguments such as resource names, etc. These arguments are inserted after the alias name.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"appendArgs": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "AppendArgs stores the arguments such as resource names, etc. These arguments are appended to the USER_ARGS.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"flags": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "Flag is allocated to store the flag definitions of alias. Flag only modifies the default value of the flag and if user explicitly passes a value, explicit one is used.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/kubectl/pkg/config/v1alpha1.CommandOverrideFlag"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"name", "command"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/kubectl/pkg/config/v1alpha1.CommandOverrideFlag"},
-	}
-}
-
-func schema_kubectl_pkg_config_v1alpha1_CommandOverride(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CommandOverride stores the commands and their associated flag's default values.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"command": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Command refers to a command whose flag's default value is changed.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"flags": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "Flags is a list of flags storing different default values.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/kubectl/pkg/config/v1alpha1.CommandOverrideFlag"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"command", "flags"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/kubectl/pkg/config/v1alpha1.CommandOverrideFlag"},
-	}
-}
-
-func schema_kubectl_pkg_config_v1alpha1_CommandOverrideFlag(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CommandOverrideFlag stores the name and the specified default value of the flag.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Flag name (long form, without dashes).",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"default": {
-						SchemaProps: spec.SchemaProps{
-							Description: "In a string format of a default value. It will be parsed by kubectl to the compatible value of the flag.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"name", "default"},
-			},
-		},
-	}
-}
-
-func schema_kubectl_pkg_config_v1alpha1_Preference(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "Preference stores elements of KubeRC configuration file",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"overrides": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "overrides allows changing default flag values of commands. This is especially useful, when user doesn't want to explicitly set flags each time.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/kubectl/pkg/config/v1alpha1.CommandOverride"),
-									},
-								},
-							},
-						},
-					},
-					"aliases": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "aliases allows defining command aliases for existing kubectl commands, with optional default flag values. If the alias name collides with a built-in command, built-in command always takes precedence. Flag overrides defined in the overrides section do NOT apply to aliases for the same command. kubectl [ALIAS NAME] [USER_FLAGS] [USER_EXPLICIT_ARGS] expands to kubectl [COMMAND] # built-in command alias points to\n        [KUBERC_PREPEND_ARGS]\n        [USER_FLAGS]\n        [KUBERC_FLAGS] # rest of the flags that are not passed by user in [USER_FLAGS]\n        [USER_EXPLICIT_ARGS]\n        [KUBERC_APPEND_ARGS]\ne.g. - name: runx\n  command: run\n  flags:\n  - name: image\n    default: nginx\n  appendArgs:\n  - --\n  - custom-arg1\nFor example, if user invokes \"kubectl runx test-pod\" command, this will be expanded to \"kubectl run --image=nginx test-pod -- custom-arg1\" - name: getn\n  command: get\n  flags:\n  - name: output\n    default: wide\n  prependArgs:\n  - node\n\"kubectl getn control-plane-1\" expands to \"kubectl get node control-plane-1 --output=wide\" \"kubectl getn control-plane-1 --output=json\" expands to \"kubectl get node --output=json control-plane-1\"",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/kubectl/pkg/config/v1alpha1.AliasOverride"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"overrides", "aliases"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/kubectl/pkg/config/v1alpha1.AliasOverride", "k8s.io/kubectl/pkg/config/v1alpha1.CommandOverride"},
-	}
-}
-
 func schema_k8sio_kubelet_config_v1_CredentialProvider(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -63858,12 +63623,18 @@ func schema_k8sio_kubelet_config_v1_CredentialProvider(ref common.ReferenceCallb
 							},
 						},
 					},
+					"tokenAttributes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TokenAttributes is the configuration for the service account token that will be passed to the plugin. The credential provider opts in to using service account tokens for image pull by setting this field. When this field is set, kubelet will generate a service account token bound to the pod for which the image is being pulled and pass to the plugin as part of CredentialProviderRequest along with other attributes required by the plugin.\n\nThe service account metadata and token attributes will be used as a dimension to cache the credentials in kubelet. The cache key is generated by combining the service account metadata (namespace, name, UID, and annotations key+value for the keys defined in ServiceAccountTokenAttribute.serviceAccountAnnotationKeys).",
+							Ref:         ref("k8s.io/kubelet/config/v1.ServiceAccountTokenAttributes"),
+						},
+					},
 				},
 				Required: []string{"name", "matchImages", "defaultCacheDuration", "apiVersion"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "k8s.io/kubelet/config/v1.ExecEnvVar"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "k8s.io/kubelet/config/v1.ExecEnvVar", "k8s.io/kubelet/config/v1.ServiceAccountTokenAttributes"},
 	}
 }
 
@@ -63934,6 +63705,55 @@ func schema_k8sio_kubelet_config_v1_ExecEnvVar(ref common.ReferenceCallback) com
 					},
 				},
 				Required: []string{"name", "value"},
+			},
+		},
+	}
+}
+
+func schema_k8sio_kubelet_config_v1_ServiceAccountTokenAttributes(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ServiceAccountTokenAttributes is the configuration for the service account token that will be passed to the plugin.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"serviceAccountTokenAudience": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceAccountTokenAudience is the intended audience for the projected service account token.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"requireServiceAccount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RequireServiceAccount indicates whether the plugin requires the pod to have a service account. If set to true, kubelet will only invoke the plugin if the pod has a service account. If set to false, kubelet will invoke the plugin even if the pod does not have a service account. This is useful for plugins that are used to pull images for pods without service accounts (e.g., static pods).",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"serviceAccountAnnotationKeys": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceAccountAnnotationKeys is the list of annotation keys that the plugin is interested in. The keys defined in this list will be extracted from the corresponding service account and passed to the plugin as part of the CredentialProviderRequest. The plugin is responsible for validating the existence of annotations and their values. This field is optional and may be empty. Plugins may use this field to extract additional information required to fetch credentials.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"serviceAccountTokenAudience", "requireServiceAccount"},
 			},
 		},
 	}
